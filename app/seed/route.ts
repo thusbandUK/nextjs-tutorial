@@ -1,4 +1,9 @@
 /*
+
+the below interacted directly with the database, but note that in the final function there were two return statements,
+the first gave an onscreen instruction for it to be deleted, which then meant the second return function was executed,
+which was the one that executed the seeding of the database
+
 import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres';
 import { invoices, customers, revenue, users } from '../lib/placeholder-data';
@@ -103,10 +108,10 @@ async function seedRevenue() {
 }
 
 export async function GET() {
-  return Response.json({
-    message:
-      'Uncomment this file and remove this line. You can delete this file when you are finished.',
-  });
+  //return Response.json({
+    //message:
+      //'Uncomment this file and remove this line. You can delete this file when you are finished.',
+  //});
   try {
     await client.sql`BEGIN`;
     await seedUsers();
