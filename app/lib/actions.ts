@@ -42,21 +42,22 @@ export async function createInvoice(prevState: State, formData: FormData) {
 
       // If form validation fails, return errors early. Otherwise, continue.
       if (!validatedFields.success) {
-        console.log(validatedFields)
+        
         return {
           errors: validatedFields.error.flatten().fieldErrors,
           message: 'Missing Fields. Failed to Create Invoice.',
         };
       }
 
-      //console.log(validatedFields);
-      const amountInCents = validatedFields.data.amount * 100;
+      const { customerId, amount, status } = validatedFields.data;
+      
+      const amountInCents = amount * 100;
       const date = new Date().toISOString().split('T')[0];
 
     try {
       await sql`
         INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${validatedFields.data.customerId}, ${amountInCents}, ${validatedFields.data.status}, ${date})
+        VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
       `;
 
       
@@ -71,13 +72,26 @@ export async function createInvoice(prevState: State, formData: FormData) {
       
 }
 
-export async function updateInvoice(id: string, formData: FormData) {
-    const { customerId, amount, status } = UpdateInvoice.parse({
+//I put prev state in between the existing two parameters, must call with arguments in correct position
+export async function updateInvoice(id: string, prevState: State, formData: FormData) {
+  const validatedFields = CreateInvoice.safeParse({  
+  //const { customerId, amount, status } = UpdateInvoice.parse({
       customerId: formData.get('customerId'),
       amount: formData.get('amount'),
       status: formData.get('status'),
     });
+
+    // If form validation fails, return errors early. Otherwise, continue.
+    if (!validatedFields.success) {
+      console.log(validatedFields)
+      return {
+        errors: validatedFields.error.flatten().fieldErrors,
+        message: 'Missing Fields. Failed to update Invoice.',
+      };
+    }
    
+    const { customerId, amount, status } = validatedFields.data;
+
     const amountInCents = amount * 100;
    
   try {
