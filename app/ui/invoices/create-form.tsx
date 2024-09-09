@@ -79,7 +79,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                   {error}
                 </p>
               ))}
-      </div>
+            </div>
           </div>
         </div>
 
@@ -97,6 +97,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                   type="radio"
                   value="pending"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  aria-describedby="status-error"
                 />
                 <label
                   htmlFor="pending"
@@ -112,6 +113,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                   type="radio"
                   value="paid"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  aria-describedby="status-error"
                 />
                 <label
                   htmlFor="paid"
@@ -120,6 +122,14 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                   Paid <CheckIcon className="h-4 w-4" />
                 </label>
               </div>
+            </div>
+            <div id="status-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.status &&
+              state.errors.status.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
             </div>
           </div>
         </fieldset>
